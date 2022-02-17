@@ -1,12 +1,17 @@
-import express, { Request, Response } from "express";
+import express from "express";
 
-const PORT = 8080;
-const HOST = "http://localhost";
+import { config } from "./config/Constants";
+import { URLController } from "./controller/URLController";
+
+const urlController = new URLController();
 
 const app = express();
 
-app.get('/', (req: Request, res: Response) => {
-  res.json({ success: true });
-});
+app.use(express.json());
 
-app.listen(8080, () => console.log(`Server is running in ${HOST}:${PORT}`));
+app.post('/shorten', urlController.shorten);
+app.get('/:hash', urlController.redirect);
+
+app.listen(8080, () => {
+  console.log(`Server is running in ${config.API_URL}:${config.PORT}`)
+});
